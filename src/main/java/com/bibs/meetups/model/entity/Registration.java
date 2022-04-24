@@ -1,4 +1,34 @@
 package com.bibs.meetups.model.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.time.LocalDate;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Registration {
+
+    @Id // persistência de um elemento único da tabela
+    @Column(name = " registration_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    @Column(name = "registration_name")
+    private String name;
+
+    @Column(name = "date_of_registration")
+    private LocalDate dateOfRegistration;
+
+    @Column
+    private String meetupCommunity;
+
 }
