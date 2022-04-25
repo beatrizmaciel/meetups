@@ -5,8 +5,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
 
@@ -26,9 +28,18 @@ public class RegistrationServiceTest {
         // cenario
         Registration registration = createValidRegistration();
 
-        // execucao
+        // execução (simula o serviço e o controller)
+        Mockito.when(repository.existsByRegistration(Mockito.anyString())).thenReturn(false);
+        Mockito.when(repository.save(registration)).thenReturn(createValidRegistration());
+
+        Registration savedRegistration = registrationService.save(registration);
 
         // assert
+        assertThat(savedRegistration.getId()).isEqualTo(101);
+        assertThat(savedRegistration.getName()).isEqualTo("Paula");
+        assertThat(savedRegistration.getDateOfRegistration()).isEqualTo(LocalDate.now());
+        assertThat(savedRegistration.getMeetupCommunity()).isEqualTo("001");
+
 
     }
 
