@@ -18,7 +18,7 @@ import java.time.LocalDate;
 @ActiveProfiles("test")
 public class RegistrationServiceTest {
 
-    RegistrationRepository registrationService;
+    RegistrationService registrationService;
 
     @MockBean
     RegistrationRepository repository;
