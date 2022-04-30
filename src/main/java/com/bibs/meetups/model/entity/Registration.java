@@ -20,7 +20,7 @@ public class Registration {
     @Id // persistência de um elemento único da tabela
     @Column(name = " registration_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Integer id;
 
     @Column(name = "registration_name")
     private String name;
