@@ -23,5 +23,5 @@ public class RegistrationDTO {
     private LocalDate dateOfRegistration;
 
     @NotEmpty
-    private String meetupCommunity;
+    private String registration;
 }

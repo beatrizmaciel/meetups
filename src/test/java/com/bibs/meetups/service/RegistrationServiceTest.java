@@ -2,6 +2,7 @@ package com.bibs.meetups.service;
 
 import com.bibs.meetups.model.entity.Registration;
 import com.bibs.meetups.repository.RegistrationRepository;
+import com.bibs.meetups.service.impl.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,6 +11,7 @@ import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.time.LocalDate;
@@ -25,7 +27,7 @@ public class RegistrationServiceTest {
 
     @BeforeEach // antes de cada teste...
     public void setUp() {
-        // dependencia do service e dar um new
+        this.registrationService = new RegistrationServiceImpl(repository);
     }
 
     @Test
@@ -45,7 +47,7 @@ public class RegistrationServiceTest {
         assertThat(savedRegistration.getId()).isEqualTo(101);
         assertThat(savedRegistration.getName()).isEqualTo("Paula");
         assertThat(savedRegistration.getDateOfRegistration()).isEqualTo(LocalDate.now());
-        assertThat(savedRegistration.getMeetupCommunity()).isEqualTo("001");
+        assertThat(savedRegistration.getRegistration()).isEqualTo("001");
 
     }
 
@@ -54,7 +56,7 @@ public class RegistrationServiceTest {
                 .id(101)
                 .name("Paula")
                 .dateOfRegistration(LocalDate.now())
-                .meetupCommunity("001")
+                .registration("001")
                 .build();
     }
 

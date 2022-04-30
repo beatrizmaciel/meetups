@@ -29,6 +29,6 @@ public class Registration {
     private LocalDate dateOfRegistration;
 
     @Column
-    private String meetupCommunity;
+    private String registration;
 
 }
