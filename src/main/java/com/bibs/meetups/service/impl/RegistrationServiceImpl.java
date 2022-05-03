@@ -5,6 +5,8 @@ import com.bibs.meetups.model.entity.Registration;
 import com.bibs.meetups.repository.RegistrationRepository;
 import com.bibs.meetups.service.RegistrationService;
 
+import java.util.Optional;
+
 public class RegistrationServiceImpl implements RegistrationService {
 
     RegistrationRepository repository;
@@ -18,5 +20,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
 
         return repository.save(registration);
+    }
+
+    @Override
+    public Optional<Registration> getRegistrationByID(Integer id) {
+        return this.repository.findById(id);
     }
 }

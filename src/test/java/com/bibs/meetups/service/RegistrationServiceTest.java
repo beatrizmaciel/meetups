@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Example;
@@ -82,10 +83,30 @@ public class RegistrationServiceTest {
         Throwable exception = Assertions.catchThrowable( () -> registrationService.save(registration));
         assertThat(exception)
                 .isInstanceOf(BusinessException.class)
-                .hasMessage("Registration already created!");
+                .hasMessage("Registration already created");
 
         // + uma etapa de verificação (para nunca salvar):
         Mockito.verify(repository, Mockito.never()).save(registration);
+    }
+
+    @Test
+    @DisplayName("Should get a Registration by Id")
+    public void getByRegistrationIdTest() {
+
+        // cenário
+        Integer id = 11;
+        Registration registration = createValidRegistration();
+        registration.setId(id);
+        Mockito.when(repository.findById(id)).thenReturn(Optional.of(registration));
+
+        // execução
+        Optional<Registration> registrationFound = registrationService.getRegistrationByID(id);
+
+        assertThat(registrationFound.isPresent()).isTrue();
+        assertThat(registrationFound.get().getId()).isEqualTo(id);
+        assertThat(registrationFound.get().getName()).isEqualTo(registration.getName());
+        assertThat(registrationFound.get().getDateOfRegistration()).isEqualTo(registration.getDateOfRegistration());
+        assertThat(registrationFound.get().getRegistration()).isEqualTo(registration.getRegistration());
     }
 
 }
