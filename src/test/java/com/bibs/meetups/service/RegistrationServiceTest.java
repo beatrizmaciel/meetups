@@ -63,15 +63,6 @@ public class RegistrationServiceTest {
 
     }
 
-    private Registration createValidRegistration() {
-        return Registration.builder()
-                .id(101)
-                .name("Paula")
-                .dateOfRegistration(LocalDate.now())
-                .registration("001")
-                .build();
-    }
-
     @Test
     @DisplayName("Should throw business error when try to save a new registration " +
             "with a duplicated registration")
@@ -107,6 +98,29 @@ public class RegistrationServiceTest {
         assertThat(registrationFound.get().getName()).isEqualTo(registration.getName());
         assertThat(registrationFound.get().getDateOfRegistration()).isEqualTo(registration.getDateOfRegistration());
         assertThat(registrationFound.get().getRegistration()).isEqualTo(registration.getRegistration());
+    }
+
+    @Test
+    @DisplayName("Should return empty when a registration by id doesn't exist")
+    public void registrationNotFoundById() {
+
+        // cenario de erro
+        Integer id = 11;
+        Mockito.when(repository.findById(id)).thenReturn(Optional.empty()); // objeto vazio
+
+        Optional<Registration> registration = registrationService.getRegistrationByID(id);
+
+        // a validação tem que retornar falso pq dá erro quando perguntamos se o objeto está presente:
+        assertThat(registration.isPresent()).isFalse();
+    }
+
+    private Registration createValidRegistration() {
+        return Registration.builder()
+                .id(101)
+                .name("Paula")
+                .dateOfRegistration(LocalDate.now())
+                .registration("001")
+                .build();
     }
 
 }
