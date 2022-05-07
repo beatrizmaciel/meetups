@@ -149,6 +149,31 @@ public class RegistrationServiceTest {
 
     }
 
+    @Test
+    @DisplayName("Should filter registration throw its properties")
+    public void findRegistrationTest() {
+
+        // cenario
+        Registration registration = createValidRegistration();
+        PageRequest pageRequest = PageRequest.of(0, 10);
+
+        List<Registration> listRegistrations = Arrays.asList(registration);
+        Page<Registration> page = new PageImpl<Registration>(Arrays.asList(registration), PageRequest.of(0, 10), 1);
+
+        // execução
+        Mockito.when(repository.findAll(Mockito.any(Example.class), Mockito.any(PageRequest.class)))
+                .thenReturn(page); // retorna o cenário de Page que criamos acima
+
+        Page<Registration> result = registrationService.find(registration, pageRequest);
+
+        // assert
+
+        assertThat(result.getTotalElements()).isEqualTo(1); // 1 é o total de paginações que especificamos acima
+        assertThat(result.getContent()).isEqualTo(listRegistrations); // confere se o conteúdo é o mesmo da nossa lista
+        assertThat(result.getPageable().getPageNumber()).isEqualTo(0); // page
+        assertThat(result.getPageable().getPageSize()).isEqualTo(10); // size
+    }
+
     private Registration createValidRegistration() {
         return Registration.builder()
                 .id(101)

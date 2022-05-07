@@ -4,6 +4,10 @@ import com.bibs.meetups.exception.BusinessException;
 import com.bibs.meetups.model.entity.Registration;
 import com.bibs.meetups.repository.RegistrationRepository;
 import com.bibs.meetups.service.RegistrationService;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 
 import java.util.Optional;
 
@@ -42,5 +46,16 @@ public class RegistrationServiceImpl implements RegistrationService {
             throw new IllegalArgumentException("Registration id can't be null");
         }
         return this.repository.save(registration);
+    }
+
+    @Override
+    public Page<Registration> find(Registration filter, PageRequest pageRequest) {
+        Example<Registration> example = Example.of(filter,
+                ExampleMatcher
+                        .matching()
+                        .withIgnoreCase()
+                        .withIgnoreNullValues()
+                        .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
+        return repository.findAll(example, pageRequest);
     }
 }
