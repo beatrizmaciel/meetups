@@ -11,4 +11,6 @@ public interface RegistrationService {
     Optional<Registration> getRegistrationByID(Integer id);
 
     void delete(Registration registration);
+
+    Registration update(Registration registration);
 }

@@ -26,8 +26,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.time.LocalDate;
-
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 public class RegistrationServiceTest {
@@ -58,7 +56,7 @@ public class RegistrationServiceTest {
         // assert
         assertThat(savedRegistration.getId()).isEqualTo(101);
         assertThat(savedRegistration.getName()).isEqualTo("Paula");
-        assertThat(savedRegistration.getDateOfRegistration()).isEqualTo(LocalDate.now());
+        assertThat(savedRegistration.getDateOfRegistration()).isEqualTo("04/04/2022");
         assertThat(savedRegistration.getRegistration()).isEqualTo("001");
 
     }
@@ -126,13 +124,36 @@ public class RegistrationServiceTest {
         Mockito.verify(repository, Mockito.times(1)).delete(registration); // para chamar uma única vez
 
     }
-    
+
+    @Test
+    @DisplayName("Should update a registration")
+    public void updateRegistration() {
+
+        // cenario
+        Integer id = 11;
+        Registration updatingRegistration = Registration.builder().id(11).build();
+
+        // execução
+        // depois de validar, retornar esse registration:
+        Registration updatedRegistration = createValidRegistration();
+        updatedRegistration.setId(id);
+
+        Mockito.when(repository.save(updatingRegistration)).thenReturn(updatedRegistration);
+        Registration registration = registrationService.update(updatingRegistration);
+
+        // assert
+        assertThat(registration.getId()).isEqualTo(updatedRegistration.getId());
+        assertThat(registration.getName()).isEqualTo(updatedRegistration.getName());
+        assertThat(registration.getDateOfRegistration()).isEqualTo(updatedRegistration.getDateOfRegistration());
+        assertThat(registration.getRegistration()).isEqualTo(updatedRegistration.getRegistration());
+
+    }
 
     private Registration createValidRegistration() {
         return Registration.builder()
                 .id(101)
                 .name("Paula")
-                .dateOfRegistration(LocalDate.now())
+                .dateOfRegistration("04/04/2022")
                 .registration("001")
                 .build();
     }
