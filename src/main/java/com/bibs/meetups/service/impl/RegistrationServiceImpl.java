@@ -26,4 +26,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     public Optional<Registration> getRegistrationByID(Integer id) {
         return this.repository.findById(id);
     }
+
+    @Override
+    public void delete(Registration registration) {
+        if (registration == null || registration.getId() == null) {
+            throw new IllegalArgumentException("Registration id can't be null");
+        }
+        // método delete do JPA:
+        this.repository.delete(registration);
+    }
 }

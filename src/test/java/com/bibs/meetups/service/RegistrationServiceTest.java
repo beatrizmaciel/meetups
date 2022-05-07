@@ -114,6 +114,20 @@ public class RegistrationServiceTest {
         assertThat(registration.isPresent()).isFalse();
     }
 
+    @Test
+    @DisplayName("Should delete a student")
+    public void deleteRegistrationTest() {
+
+        // builder() é um design pattern usado para buscar e construir infos, aqui estamos construindo só um id
+        Registration registration = Registration.builder().id(11).build();
+
+        assertDoesNotThrow(() -> registrationService.delete(registration));
+
+        Mockito.verify(repository, Mockito.times(1)).delete(registration); // para chamar uma única vez
+
+    }
+    
+
     private Registration createValidRegistration() {
         return Registration.builder()
                 .id(101)
