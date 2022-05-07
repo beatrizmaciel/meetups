@@ -17,4 +17,6 @@ public interface RegistrationService {
     Registration update(Registration registration);
 
     Page<Registration> find(Registration filter, PageRequest pageRequest);
+
+    Optional<Registration> getRegistrationByRegistrationAtr(String registrationAttribute);
 }

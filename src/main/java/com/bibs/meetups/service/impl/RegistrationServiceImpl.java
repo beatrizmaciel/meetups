@@ -58,4 +58,9 @@ public class RegistrationServiceImpl implements RegistrationService {
                         .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING));
         return repository.findAll(example, pageRequest);
     }
+
+    @Override
+    public Optional<Registration> getRegistrationByRegistrationAtr(String registrationAttribute) {
+        return repository.findByRegistration(registrationAttribute);
+    }
 }
