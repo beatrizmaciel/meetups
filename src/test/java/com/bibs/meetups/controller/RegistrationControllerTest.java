@@ -72,7 +72,25 @@ public class RegistrationControllerTest {
                 .andExpect(jsonPath("dateOfRegistration").value(registrationDTOBuilder.getDateOfRegistration()))
                 .andExpect(jsonPath("registration").value(registrationDTOBuilder.getRegistration()));
 
-}
+    }
+
+    @Test
+    @DisplayName("Should throw an Exception when there is missing data")
+    public void createInvalidRegistrationTest() throws Exception {
+
+        String json = new ObjectMapper().writeValueAsString(new RegistrationDTO());
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(REGISTRATION_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        mockMvc.perform(request)
+                .andExpect(status().isBadRequest());
+
+    }
+
         private RegistrationDTO createNewRegistration() {
             return RegistrationDTO.builder()
                     .id(101)
