@@ -1,4 +1,4 @@
-package com.bibs.meetups.model.entity;
+package com.bibs.meetups.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

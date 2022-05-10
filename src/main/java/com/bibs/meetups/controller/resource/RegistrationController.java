@@ -1,10 +1,9 @@
-package com.bibs.meetups.controller;
+package com.bibs.meetups.controller.resource;
 
 import com.bibs.meetups.model.entity.Registration;
-import com.bibs.meetups.model.entity.RegistrationDTO;
+import com.bibs.meetups.controller.dto.RegistrationDTO;
 import com.bibs.meetups.service.RegistrationService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;

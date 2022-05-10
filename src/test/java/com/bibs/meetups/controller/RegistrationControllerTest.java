@@ -1,8 +1,9 @@
 package com.bibs.meetups.controller;
 
+import com.bibs.meetups.controller.resource.RegistrationController;
 import com.bibs.meetups.exception.BusinessException;
 import com.bibs.meetups.model.entity.Registration;
-import com.bibs.meetups.model.entity.RegistrationDTO;
+import com.bibs.meetups.controller.dto.RegistrationDTO;
 import com.bibs.meetups.service.RegistrationService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,11 +16,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockHttpServletRequestDsl;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Optional;
