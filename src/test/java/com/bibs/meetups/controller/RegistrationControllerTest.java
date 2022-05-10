@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockHttpServletRequestDsl;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Optional;
@@ -194,6 +195,52 @@ public class RegistrationControllerTest {
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotFound());
+
+    }
+
+    @Test
+    @DisplayName("Should update registration's info")
+    public void updateRegistrationTest() throws Exception {
+
+        Integer id = 11;
+        String json = new ObjectMapper().writeValueAsString(createNewRegistration());
+
+        Registration updatingRegistration =
+                Registration.builder()
+                        .id(id)
+                        .name("Amanda")
+                        .dateOfRegistration("04/04/2022")
+                        .registration("323")
+                        .build();
+
+        BDDMockito.given(registrationService.getRegistrationByID(anyInt()))
+                .willReturn(Optional.of(updatingRegistration));
+
+        Registration updatedRegistration =
+                Registration.builder()
+                        .id(id)
+                        .name("Paula")
+                        .dateOfRegistration("04/04/2022")
+                        .registration("323")
+                        .build();
+
+        BDDMockito.given(registrationService
+                        .update(updatingRegistration))
+                .willReturn(updatedRegistration);
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .put(REGISTRATION_API.concat("/" + 1))
+                .contentType(json)
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("id").value(id))
+                .andExpect(jsonPath("name").value(createNewRegistration().getName()))
+                .andExpect(jsonPath("dateOfRegistration").value(createNewRegistration().getDateOfRegistration()))
+                .andExpect(jsonPath("registration").value("323"));
+
 
     }
 
