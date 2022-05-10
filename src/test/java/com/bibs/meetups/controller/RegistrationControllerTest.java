@@ -1,5 +1,6 @@
 package com.bibs.meetups.controller;
 
+import com.bibs.meetups.exception.BusinessException;
 import com.bibs.meetups.model.entity.Registration;
 import com.bibs.meetups.model.entity.RegistrationDTO;
 import com.bibs.meetups.service.RegistrationService;
@@ -21,6 +22,7 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.util.Optional;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -52,7 +54,7 @@ public class RegistrationControllerTest {
                                             .registration("001")
                                             .build();
 
-        // exceução
+        // execução
         // o BDDMockito serve para simular a camada do usuário
         BDDMockito.given(registrationService.save(any(Registration.class))).willReturn(savedRegistration);
 
@@ -117,6 +119,33 @@ public class RegistrationControllerTest {
                 .andExpect(jsonPath("name").value(createNewRegistration().getName()))
                 .andExpect(jsonPath("dateOfRegistration").value(createNewRegistration().getDateOfRegistration()))
                 .andExpect(jsonPath("registration").value(createNewRegistration().getRegistration()));
+    }
+
+    @Test
+    @DisplayName("Should throw an Exception when creates a duplicated registration")
+    public void createDuplicatedRegistration() throws Exception {
+
+        // cenário
+        RegistrationDTO dto = createNewRegistration();
+        String json = new ObjectMapper().writeValueAsString(dto);
+
+        // execução
+        BDDMockito.given(registrationService.save(any(Registration.class)))
+                .willThrow(new BusinessException("Registration already exists"));
+
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders
+                .post(REGISTRATION_API)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(json);
+
+        // assert
+        mockMvc
+                .perform(request)
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("errors", hasSize(1)))
+                .andExpect(jsonPath("errors").value("Registration already exists"));
+
     }
 
         private RegistrationDTO createNewRegistration() {
