@@ -125,7 +125,7 @@ public class RegistrationControllerTest {
 
     @Test
     @DisplayName("Should throw an Exception when creates a duplicated registration")
-    public void createDuplicatedRegistration() throws Exception {
+    public void createDuplicatedRegistrationTest() throws Exception {
 
         // cenário
         RegistrationDTO dto = createNewRegistration();
@@ -167,7 +167,7 @@ public class RegistrationControllerTest {
 
     @Test
     @DisplayName("Should delete registration")
-    public void deleteRegistration() throws Exception {
+    public void deleteRegistrationTest() throws Exception {
 
         BDDMockito.given(registrationService
                 .getRegistrationByID(anyInt())).willReturn(Optional.of(Registration.builder().id(11).build()));
@@ -178,6 +178,22 @@ public class RegistrationControllerTest {
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNoContent());
+
+    }
+
+    @Test
+    @DisplayName("Should return error when the user tries to delete a nonexistent registration")
+    public void deleteNonExistentRegistrationTest() throws Exception {
+
+        BDDMockito.given(registrationService
+                .getRegistrationByID(anyInt())).willReturn(Optional.empty());
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .delete(REGISTRATION_API.concat("/" + 1))
+                .accept(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isNotFound());
 
     }
 
