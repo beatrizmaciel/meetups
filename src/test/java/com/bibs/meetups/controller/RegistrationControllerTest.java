@@ -19,9 +19,10 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.util.Optional;
+
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class) // precisa dessa classe para teste
 @ActiveProfiles("test")
@@ -89,6 +90,33 @@ public class RegistrationControllerTest {
         mockMvc.perform(request)
                 .andExpect(status().isBadRequest());
 
+    }
+
+    @Test
+    @DisplayName("Should get a registration information")
+    public void getRegistrationTest() throws Exception {
+        Integer id = 101;
+
+        Registration registration = Registration.builder()
+                .id(id)
+                .name(createNewRegistration().getName())
+                .dateOfRegistration(createNewRegistration().getDateOfRegistration())
+                .registration(createNewRegistration().getRegistration())
+                .build();
+
+        BDDMockito.given(registrationService.getRegistrationByID(id)).willReturn(Optional.of(registration));
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .get(REGISTRATION_API.concat("/" + id)) // rota depois da rota principal
+                .accept(MediaType.APPLICATION_JSON);
+
+        mockMvc
+                .perform(requestBuilder)
+                .andExpect(status().isOk()) //isOk = 200, 201 significa criado, aqui queremos só 200
+                .andExpect(jsonPath("id").value(101))
+                .andExpect(jsonPath("name").value(createNewRegistration().getName()))
+                .andExpect(jsonPath("dateOfRegistration").value(createNewRegistration().getDateOfRegistration()))
+                .andExpect(jsonPath("registration").value(createNewRegistration().getRegistration()));
     }
 
         private RegistrationDTO createNewRegistration() {

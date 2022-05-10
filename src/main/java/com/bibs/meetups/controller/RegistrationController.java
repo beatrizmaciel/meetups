@@ -7,6 +7,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
 
@@ -33,6 +34,17 @@ public class RegistrationController {
         entity = registrationService.save(entity); // serviço dentro do método save
 
         return modelMapper.map(entity, RegistrationDTO.class);
+
+    }
+
+    @GetMapping("{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public RegistrationDTO get (@PathVariable Integer id) {
+
+        return registrationService
+                .getRegistrationByID(id) // busca por id
+                .map(registration -> modelMapper.map(registration, RegistrationDTO.class)) // mapear entidade/dados de transferência com lambda functions
+                .orElseThrow( () -> new ResponseStatusException(HttpStatus.NOT_FOUND)); // caso não encontre os dados, dá o NOT FOUND
 
     }
 
