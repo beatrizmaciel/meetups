@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockHttpServletRequestDsl;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -24,6 +25,7 @@ import java.util.Optional;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class) // precisa dessa classe para teste
@@ -145,6 +147,21 @@ public class RegistrationControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("errors", hasSize(1)))
                 .andExpect(jsonPath("errors").value("Registration already exists"));
+
+    }
+
+    @Test
+    @DisplayName("Should return not found when a registration doesnt exist")
+    public void registrationNotFoundTest() throws Exception {
+
+        BDDMockito.given(registrationService.getRegistrationByID(anyInt())).willReturn(Optional.empty());
+
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders
+                .get(REGISTRATION_API.concat("/" + 1))
+                .accept(MediaType.APPLICATION_JSON);
+
+        mockMvc.perform(requestBuilder)
+                .andExpect(status().isNotFound());
 
     }
 

@@ -3,6 +3,7 @@ package com.bibs.meetups.controller;
 import com.bibs.meetups.controller.exceptions.ApiErrors;
 import com.bibs.meetups.exception.BusinessException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -29,8 +30,8 @@ public class ApplicationControllerAdvice {
 
     @ExceptionHandler(ResponseStatusException.class)
     @ResponseStatus
-    public ApiErrors handleResponseStatusException(ResponseStatusException e) {
-        return new ApiErrors(e);
+    public ResponseEntity handleResponseStatusException(ResponseStatusException ex) {
+        return new ResponseEntity(new ApiErrors(ex), ex.getStatus());
     }
 
 }

@@ -48,4 +48,11 @@ public class RegistrationController {
 
     }
 
+    @DeleteMapping("{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteRegistrationbyId(@PathVariable Integer id) {
+        Registration registration = registrationService.getRegistrationByID(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        registrationService.delete(registration);
+    }
+
 }
