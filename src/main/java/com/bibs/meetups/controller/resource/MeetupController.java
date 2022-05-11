@@ -1,8 +1,10 @@
 package com.bibs.meetups.controller.resource;
 
 import com.bibs.meetups.controller.dto.MeetupDTO;
+import com.bibs.meetups.controller.dto.MeetupFilterDTO;
 import com.bibs.meetups.controller.dto.RegistrationDTO;
 import com.bibs.meetups.model.entity.Meetup;
+import com.bibs.meetups.service.MeetupService;
 import com.bibs.meetups.model.entity.Registration;
 import com.bibs.meetups.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +34,7 @@ public class MeetupController {
     @ResponseStatus(HttpStatus.CREATED)
     private Integer create(@RequestBody MeetupDTO meetupDTO) {
 
-        Registration registration = registrationService.getRegistrationByRegistrationAttribute(meetupDTO.getRegistrationAttribute())
+        Registration registration = registrationService.getRegistrationByRegistrationAtr(meetupDTO.getRegistrationAttribute())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST));
         Meetup entity = Meetup.builder()
                 .registration(registration)
